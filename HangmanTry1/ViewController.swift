@@ -62,6 +62,18 @@ class ViewController: UIViewController {
         buttonsView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(buttonsView)
         
+        submit.addTarget(self, action: #selector(submitTapped), for: .touchUpInside)
+        
+        clear.addTarget(self, action: #selector(clearTapped), for: .touchUpInside)
+        
+        
+    }
+    
+    @objc func submitTapped(_ sender: UIButton) {
+        
+    }
+    
+    @objc func clearTapped(_ sender: UIButton) {
         
     }
     override func viewDidLoad() {
