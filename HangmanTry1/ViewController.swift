@@ -32,12 +32,14 @@ class ViewController: UIViewController {
         livesLabel.translatesAutoresizingMaskIntoConstraints = false
         livesLabel.textAlignment = .left
         livesLabel.text = "Lives: 5"
+        livesLabel.backgroundColor = .red
         view.addSubview(livesLabel)
         
         scoreLabel = UILabel()
         scoreLabel.translatesAutoresizingMaskIntoConstraints = false
         scoreLabel.textAlignment = .right
         scoreLabel.text = "Score: 0"
+        scoreLabel.font = UIFont.systemFont(ofSize: 32)
         view.addSubview(scoreLabel)
         
         currentAnswer = UITextField()
@@ -61,6 +63,26 @@ class ViewController: UIViewController {
         let buttonsView = UIView()
         buttonsView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(buttonsView)
+        
+        scoreLabel.backgroundColor = .blue
+        
+        
+        
+        NSLayoutConstraint.activate([
+        
+            scoreLabel.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 20),
+            scoreLabel.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor, constant: -20),
+            livesLabel.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 20)
+        
+        
+        
+        
+        
+        
+        ])
+        
+        
+        
         
         submit.addTarget(self, action: #selector(submitTapped), for: .touchUpInside)
         
