@@ -93,8 +93,10 @@ class ViewController: UIViewController {
         
             scoreLabel.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 20),
             scoreLabel.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor, constant: -20),
+            
             livesLabel.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 20),
             livesLabel.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor, constant: 20),
+            
             hangmanImage.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor),
             hangmanImage.heightAnchor.constraint(equalTo: view.layoutMarginsGuide.heightAnchor, multiplier: 0.3),
             hangmanImage.topAnchor.constraint(equalTo: livesLabel.bottomAnchor, constant: 30),
@@ -106,7 +108,14 @@ class ViewController: UIViewController {
             currentAnswer.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor, multiplier: 0.5),
             
             submit.topAnchor.constraint(equalTo: currentAnswer.bottomAnchor, constant: 15),
-            submit.centerXAnchor.constraint(equalTo: view.layoutMarginsGuide.centerXAnchor),
+            submit.centerXAnchor.constraint(equalTo: view.layoutMarginsGuide.centerXAnchor, constant: 30),
+            submit.widthAnchor.constraint(equalToConstant: 50),
+            submit.heightAnchor.constraint(equalToConstant: 15),
+            
+            clear.widthAnchor.constraint(equalToConstant: 50),
+            clear.heightAnchor.constraint(equalToConstant: 15),
+            clear.topAnchor.constraint(equalTo: currentAnswer.bottomAnchor, constant: 15),
+            clear.centerXAnchor.constraint(equalTo: view.layoutMarginsGuide.centerXAnchor, constant: -35),
             
             actualSolution.topAnchor.constraint(equalTo: submit.bottomAnchor, constant: 15),
             actualSolution.widthAnchor.constraint(equalTo: currentAnswer.widthAnchor),
@@ -137,6 +146,8 @@ class ViewController: UIViewController {
     @objc func clearTapped(_ sender: UIButton) {
         
     }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
