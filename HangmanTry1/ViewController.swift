@@ -22,6 +22,7 @@ class ViewController: UIViewController {
     var activatedButtons = [UIButton]()
     var solutions = [String]()
     var hangmanImage: UIImageView!
+    var pictureSources = [String]()
     
     override func loadView() {
         view = UIView()
@@ -33,6 +34,7 @@ class ViewController: UIViewController {
         livesLabel.textAlignment = .left
         livesLabel.text = "Lives: 5"
         livesLabel.backgroundColor = .red
+        livesLabel.font = UIFont.systemFont(ofSize: 32)
         view.addSubview(livesLabel)
         
         scoreLabel = UILabel()
@@ -66,13 +68,29 @@ class ViewController: UIViewController {
         
         scoreLabel.backgroundColor = .blue
         
+        // MARK: Image View
+        hangmanImage = UIImageView()
+        hangmanImage.translatesAutoresizingMaskIntoConstraints = false
+        hangmanImage.isUserInteractionEnabled = false
+        let imageToLoad = "HangmanImage1"
+        hangmanImage.image = UIImage(named: imageToLoad)
         
+        view.addSubview(hangmanImage)
+        hangmanImage.backgroundColor = .cyan
         
+        // MARK: Constraints
         NSLayoutConstraint.activate([
         
             scoreLabel.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 20),
             scoreLabel.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor, constant: -20),
-            livesLabel.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 20)
+            livesLabel.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 20),
+            livesLabel.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor, constant: 20),
+            hangmanImage.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor),
+            hangmanImage.heightAnchor.constraint(equalTo: view.layoutMarginsGuide.heightAnchor, multiplier: 0.3),
+            hangmanImage.topAnchor.constraint(equalTo: livesLabel.bottomAnchor, constant: 30),
+            hangmanImage.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
+            hangmanImage.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor)
+            
         
         
         

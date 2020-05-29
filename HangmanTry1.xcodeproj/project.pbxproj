@@ -16,6 +16,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9C375EA824809A4B00B80F94 /* Contents */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Contents; path = "../../All Resources/Contents"; sourceTree = "<group>"; };
 		9C5D391B244ABAF3004C835E /* HangmanTry1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HangmanTry1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C5D391E244ABAF3004C835E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9C5D3920244ABAF3004C835E /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -63,6 +64,7 @@
 				9C5D3927244ABB05004C835E /* Assets.xcassets */,
 				9C5D3929244ABB05004C835E /* LaunchScreen.storyboard */,
 				9C5D392C244ABB05004C835E /* Info.plist */,
+				9C375EA824809A4B00B80F94 /* Contents */,
 			);
 			path = HangmanTry1;
 			sourceTree = "<group>";
@@ -127,6 +129,7 @@
 			files = (
 				9C5D392B244ABB05004C835E /* LaunchScreen.storyboard in Resources */,
 				9C5D3928244ABB05004C835E /* Assets.xcassets in Resources */,
+				9C375EA924809A4B00B80F94 /* Contents in Resources */,
 				9C5D3926244ABAF3004C835E /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
