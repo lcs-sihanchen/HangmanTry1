@@ -26,6 +26,7 @@ class ViewController: UIViewController {
     var actualSolution: UILabel!
     var specificPath: String?
     var allWords = [String]()
+    var guessedLetters = [String]()
     
     override func loadView() {
         view = UIView()
@@ -144,13 +145,7 @@ class ViewController: UIViewController {
         
     }
     
-    @objc func submitTapped(_ sender: UIButton) {
-        
-    }
-    
-    @objc func clearTapped(_ sender: UIButton) {
-        
-    }
+   
     
     
     override func viewDidLoad() {
@@ -179,8 +174,24 @@ class ViewController: UIViewController {
             }
         }
         
+        
     }
     
     
+    @objc func submitTapped(_ sender: UIButton) {
+        guard let playerAnswer = currentAnswer.text, currentAnswer.text != "" else {
+            // Alert Here
+            let alert = UIAlertController(title: "Wrong Input", message: "Please type a letter or the full answer.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+            present(alert, animated: true)
+            return
+        }
+        
+       }
+       
+    
+    @objc func clearTapped(_ sender: UIButton) {
+           
+       }
 }
 
