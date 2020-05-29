@@ -25,7 +25,7 @@ class ViewController: UIViewController {
     var pictureSources = [String]()
     var actualSolution: UILabel!
     var specificPath: String?
-    
+    var allWords = [String]()
     
     override func loadView() {
         view = UIView()
@@ -141,6 +141,7 @@ class ViewController: UIViewController {
         clear.addTarget(self, action: #selector(clearTapped), for: .touchUpInside)
         
         
+        
     }
     
     @objc func submitTapped(_ sender: UIButton) {
@@ -169,6 +170,14 @@ class ViewController: UIViewController {
         pictureSources.sort()
         
         hangmanImage.image = UIImage(named: pictureSources[0])
+        
+        
+        // Load start.txt
+        if let startWordsURL = Bundle.main.url(forResource: "start", withExtension: "txt") {
+            if let startwords = try? String(contentsOf: startWordsURL) {
+                allWords = startwords.components(separatedBy: "\n")
+            }
+        }
         
     }
     
