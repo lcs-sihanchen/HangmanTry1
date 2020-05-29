@@ -23,6 +23,7 @@ class ViewController: UIViewController {
     var solutions = [String]()
     var hangmanImage: UIImageView!
     var pictureSources = [String]()
+    var actualSolution: UILabel!
     
     override func loadView() {
         view = UIView()
@@ -44,12 +45,21 @@ class ViewController: UIViewController {
         scoreLabel.font = UIFont.systemFont(ofSize: 32)
         view.addSubview(scoreLabel)
         
+        actualSolution = UILabel()
+        actualSolution.translatesAutoresizingMaskIntoConstraints = false
+        actualSolution.textAlignment = .left
+        actualSolution.text = "       "
+        actualSolution.font = UIFont.systemFont(ofSize: 28)
+        view.addSubview(actualSolution)
+        
         currentAnswer = UITextField()
         currentAnswer.translatesAutoresizingMaskIntoConstraints = false
         currentAnswer.textAlignment = .center
-        currentAnswer.font = UIFont.systemFont(ofSize: 44)
-        currentAnswer.isUserInteractionEnabled = false
+        currentAnswer.font = UIFont.systemFont(ofSize: 24)
+        currentAnswer.isUserInteractionEnabled = true
+        currentAnswer.placeholder = "Answers here"
         view.addSubview(currentAnswer)
+        
         
         // MARK: Buttons
         let submit = UIButton(type: .system)
@@ -67,7 +77,7 @@ class ViewController: UIViewController {
         view.addSubview(buttonsView)
         
         scoreLabel.backgroundColor = .blue
-        
+        actualSolution.backgroundColor = .gray
         // MARK: Image View
         hangmanImage = UIImageView()
         hangmanImage.translatesAutoresizingMaskIntoConstraints = false
@@ -89,9 +99,20 @@ class ViewController: UIViewController {
             hangmanImage.heightAnchor.constraint(equalTo: view.layoutMarginsGuide.heightAnchor, multiplier: 0.3),
             hangmanImage.topAnchor.constraint(equalTo: livesLabel.bottomAnchor, constant: 30),
             hangmanImage.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
-            hangmanImage.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor)
+            hangmanImage.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor),
             
-        
+            currentAnswer.topAnchor.constraint(equalTo: hangmanImage.bottomAnchor, constant: 40),
+            currentAnswer.centerXAnchor.constraint(equalTo: view.layoutMarginsGuide.centerXAnchor),
+            currentAnswer.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor, multiplier: 0.5),
+            
+            submit.topAnchor.constraint(equalTo: currentAnswer.bottomAnchor, constant: 15),
+            submit.centerXAnchor.constraint(equalTo: view.layoutMarginsGuide.centerXAnchor),
+            
+            actualSolution.topAnchor.constraint(equalTo: submit.bottomAnchor, constant: 15),
+            actualSolution.widthAnchor.constraint(equalTo: currentAnswer.widthAnchor),
+            actualSolution.centerXAnchor.constraint(equalTo: view.layoutMarginsGuide.centerXAnchor)
+           
+            
         
         
         
