@@ -24,6 +24,8 @@ class ViewController: UIViewController {
     var hangmanImage: UIImageView!
     var pictureSources = [String]()
     var actualSolution: UILabel!
+    var specificPath: String?
+    
     
     override func loadView() {
         view = UIView()
@@ -82,13 +84,15 @@ class ViewController: UIViewController {
         hangmanImage = UIImageView()
         hangmanImage.translatesAutoresizingMaskIntoConstraints = false
         hangmanImage.isUserInteractionEnabled = false
-        let imageToLoad = "HangmanImage1"
-        hangmanImage.image = UIImage(named: imageToLoad)
+        
+        
+            
+       
+            
         
         view.addSubview(hangmanImage)
-        hangmanImage.backgroundColor = .cyan
         
-        // MARK: Constraints
+        // MARK: Layout Constraints
         NSLayoutConstraint.activate([
         
             scoreLabel.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 20),
@@ -131,7 +135,7 @@ class ViewController: UIViewController {
         
         
         
-        
+        // Trigger submitTapped method when submit button is tapped (same with the clear button below)
         submit.addTarget(self, action: #selector(submitTapped), for: .touchUpInside)
         
         clear.addTarget(self, action: #selector(clearTapped), for: .touchUpInside)
@@ -151,6 +155,21 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        // Find the path of the file
+        let fm = FileManager.default
+        let path = Bundle.main.resourcePath!
+        let items = try! fm.contentsOfDirectory(atPath: path)
+        
+        for item in items {
+            if item.hasPrefix("Hangman") {
+                pictureSources.append(item)
+            }
+        }
+        // Sort by numbers for each stage of Hangman
+        pictureSources.sort()
+        
+        hangmanImage.image = UIImage(named: pictureSources[0])
+        
     }
     
     
