@@ -179,6 +179,11 @@ class ViewController: UIViewController {
     
     
     @objc func submitTapped(_ sender: UIButton) {
+        
+        
+        
+       
+        
         guard let playerAnswer = currentAnswer.text, currentAnswer.text != "" else {
             // Alert Here
             let alert = UIAlertController(title: "Wrong Input", message: "Please type a letter or the full answer.", preferredStyle: .alert)
@@ -186,6 +191,23 @@ class ViewController: UIViewController {
             present(alert, animated: true)
             return
         }
+        
+        // Eliminate int input
+        for n in 0...9{
+            if playerAnswer.hasPrefix("\(n)") == true {
+            let ac = UIAlertController(title: "Wrong Input", message: "Please type a letter or the full answer.", preferredStyle: .alert)
+                       ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+                       present(ac, animated: true)
+            }
+            
+            let playerGuessLowercased = playerAnswer.lowercased()
+            
+        }
+        
+        
+              
+               
+        
         
        }
        
