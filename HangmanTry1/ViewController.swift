@@ -27,6 +27,7 @@ class ViewController: UIViewController {
     var specificPath: String?
     var allWords = [String]()
     var guessedLetters = [String]()
+    var correctAnswer: String?
     
     override func loadView() {
         view = UIView()
@@ -147,10 +148,17 @@ class ViewController: UIViewController {
     
    
     
-    
+    // Load image and text (levels)
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        // Load start.txt
+        if let startWordsURL = Bundle.main.url(forResource: "start", withExtension: "txt") {
+            if let startwords = try? String(contentsOf: startWordsURL) {
+                allWords = startwords.components(separatedBy: "\n")
+            }
+        }
+        loadLevel()
         // Find the path of the file
         let fm = FileManager.default
         let path = Bundle.main.resourcePath!
@@ -167,12 +175,7 @@ class ViewController: UIViewController {
         hangmanImage.image = UIImage(named: pictureSources[0])
         
         
-        // Load start.txt
-        if let startWordsURL = Bundle.main.url(forResource: "start", withExtension: "txt") {
-            if let startwords = try? String(contentsOf: startWordsURL) {
-                allWords = startwords.components(separatedBy: "\n")
-            }
-        }
+        
         
         
     }
@@ -202,6 +205,8 @@ class ViewController: UIViewController {
             
             let playerGuessLowercased = playerAnswer.lowercased()
             
+            
+            
         }
         
         
@@ -215,5 +220,11 @@ class ViewController: UIViewController {
     @objc func clearTapped(_ sender: UIButton) {
            
        }
+    
+    @objc func loadLevel() {
+        let randomNumber = Int.random(in: 0..<allWords.count - 1)
+        correctAnswer = allWords[randomNumber]
+        print(correctAnswer!)
+    }
 }
 
