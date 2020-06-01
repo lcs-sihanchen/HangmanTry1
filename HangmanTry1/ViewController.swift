@@ -24,6 +24,7 @@ class ViewController: UIViewController {
     var hangmanImage: UIImageView!
     var pictureSources = [String]()
     var actualSolution: UILabel!
+    var answerShown: String?
     var specificPath: String?
     var allWords = [String]()
     var guessedLetters = [String]()
@@ -88,15 +89,15 @@ class ViewController: UIViewController {
         hangmanImage.isUserInteractionEnabled = false
         
         
-            
-       
-            
+        
+        
+        
         
         view.addSubview(hangmanImage)
         
         // MARK: Layout Constraints
         NSLayoutConstraint.activate([
-        
+            
             scoreLabel.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 20),
             scoreLabel.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor, constant: -20),
             
@@ -126,13 +127,13 @@ class ViewController: UIViewController {
             actualSolution.topAnchor.constraint(equalTo: submit.bottomAnchor, constant: 15),
             actualSolution.widthAnchor.constraint(equalTo: currentAnswer.widthAnchor),
             actualSolution.centerXAnchor.constraint(equalTo: view.layoutMarginsGuide.centerXAnchor)
-           
             
-        
-        
-        
-        
-        
+            
+            
+            
+            
+            
+            
         ])
         
         
@@ -146,7 +147,7 @@ class ViewController: UIViewController {
         
     }
     
-   
+    
     
     // Load image and text (levels)
     override func viewDidLoad() {
@@ -185,8 +186,8 @@ class ViewController: UIViewController {
         
         
         
-       
         
+        // Eliminate empty input
         guard let playerAnswer = currentAnswer.text, currentAnswer.text != "" else {
             // Alert Here
             let alert = UIAlertController(title: "Wrong Input", message: "Please type a letter or the full answer.", preferredStyle: .alert)
@@ -198,28 +199,37 @@ class ViewController: UIViewController {
         // Eliminate int input
         for n in 0...9{
             if playerAnswer.hasPrefix("\(n)") == true {
-            let ac = UIAlertController(title: "Wrong Input", message: "Please type a letter or the full answer.", preferredStyle: .alert)
-                       ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-                       present(ac, animated: true)
+                let ac = UIAlertController(title: "Wrong Input", message: "Please type a letter or the full answer.", preferredStyle: .alert)
+                ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+                present(ac, animated: true)
             }
             
+            // Lowercased answer
             let playerGuessLowercased = playerAnswer.lowercased()
             
+            if playerGuessLowercased == correctAnswer {
+                let ac = UIAlertController(title: "Congratulations", message: "You can move on to the next level!", preferredStyle: .alert)
+                ac.addAction(UIAlertAction(title: "Continue", style: .default, handler: { (action) in
+                    self.loadLevel()
+                    self.currentAnswer.text = ""
+                }))
+                present(ac, animated: true)
+            }
             
             
         }
         
         
-              
-               
         
         
-       }
-       
+        
+        
+    }
+    
     
     @objc func clearTapped(_ sender: UIButton) {
-           
-       }
+        
+    }
     
     @objc func loadLevel() {
         let randomNumber = Int.random(in: 0..<allWords.count - 1)
