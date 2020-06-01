@@ -28,7 +28,7 @@ class ViewController: UIViewController {
     var specificPath: String?
     var allWords = [String]()
     var guessedLetters = [String]()
-    var correctAnswer: String?
+    var correctAnswer: String!
     
     override func loadView() {
         view = UIView()
@@ -53,7 +53,7 @@ class ViewController: UIViewController {
         actualSolution = UILabel()
         actualSolution.translatesAutoresizingMaskIntoConstraints = false
         actualSolution.textAlignment = .left
-        actualSolution.text = "       "
+        actualSolution.text = "--------"
         actualSolution.font = UIFont.systemFont(ofSize: 28)
         view.addSubview(actualSolution)
         
@@ -214,6 +214,13 @@ class ViewController: UIViewController {
                     self.currentAnswer.text = ""
                 }))
                 present(ac, animated: true)
+            } else if correctAnswer.contains(playerGuessLowercased) == true && playerGuessLowercased.count == 1 {
+                
+                for scalar in correctAnswer.unicodeScalars {
+                    
+                    print(scalar.value)
+                }
+//                actualSolution.text?.replacingOccurrences(of: "-", with: playerGuessLowercased, range: <#T##Range<String.Index>?#>)
             }
             
             
