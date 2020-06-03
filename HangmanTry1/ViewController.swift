@@ -52,7 +52,7 @@ class ViewController: UIViewController {
         
         actualSolution = UILabel()
         actualSolution.translatesAutoresizingMaskIntoConstraints = false
-        actualSolution.textAlignment = .left
+        actualSolution.textAlignment = .center
         actualSolution.text = "--------"
         actualSolution.font = UIFont.systemFont(ofSize: 50)
         view.addSubview(actualSolution)
