@@ -188,9 +188,9 @@ class ViewController: UIViewController {
         
         
         // Eliminate empty input
-        guard let playerAnswer = currentAnswer.text, currentAnswer.text != "" else {
+        guard let playerAnswer = currentAnswer.text, currentAnswer.text != "" , currentAnswer.text?.count == 1 || currentAnswer.text?.count == 8 else {
             // Alert Here
-            let alert = UIAlertController(title: "Wrong Input", message: "Please type a letter or the full answer.", preferredStyle: .alert)
+            let alert = UIAlertController(title: "Wrong Input", message: "Please type a single letter or the full answer.", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
             present(alert, animated: true)
             return
@@ -208,7 +208,7 @@ class ViewController: UIViewController {
         // Lowercased answer
         let playerGuessLowercased = playerAnswer.lowercased()
         
-        
+        // If the player gets the answer in one guess
         if playerGuessLowercased == correctAnswer {
             let ac = UIAlertController(title: "Congratulations", message: "You can move on to the next level!", preferredStyle: .alert)
             ac.addAction(UIAlertAction(title: "Continue", style: .default, handler: { (action) in
@@ -216,13 +216,13 @@ class ViewController: UIViewController {
                 self.currentAnswer.text = ""
             }))
             present(ac, animated: true)
-            
+        // If the player guess a letter
         } else if correctAnswer.contains(playerGuessLowercased) == true && playerGuessLowercased.count == 1 {
             
             
             
             
-            var arrayForWord = Array(correctAnswer)
+            let arrayForWord = Array(correctAnswer)
             
             for x in 0...7 {
                 
