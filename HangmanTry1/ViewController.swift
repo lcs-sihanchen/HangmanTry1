@@ -210,12 +210,18 @@ class ViewController: UIViewController {
         
         // If the player gets the answer in one guess
         if playerGuessLowercased == correctAnswer {
+            wordInProgress = playerGuessLowercased
+            actualSolution.text = wordInProgress
             let ac = UIAlertController(title: "Congratulations", message: "You can move on to the next level!", preferredStyle: .alert)
             ac.addAction(UIAlertAction(title: "Continue", style: .default, handler: { (action) in
+                // call loadLevel() when player clicks continue
                 self.loadLevel()
                 self.currentAnswer.text = ""
+                self.actualSolution.text = "--------"
+                self.wordInProgress = "--------"
             }))
             present(ac, animated: true)
+            
         // If the player guess a letter
         } else if correctAnswer.contains(playerGuessLowercased) == true && playerGuessLowercased.count == 1 {
             
@@ -242,6 +248,7 @@ class ViewController: UIViewController {
                     self.loadLevel()
                     self.currentAnswer.text = ""
                     self.actualSolution.text = "--------"
+                    self.wordInProgress = "--------"
                 }))
                 present(ac, animated: true)
                 
