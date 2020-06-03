@@ -219,7 +219,19 @@ class ViewController: UIViewController {
                 
                
                     
-                wordInProgress = replaceSingleLetter(from: wordInProgress, target: "-", with: Character(playerGuessLowercased))
+                
+                    
+                    
+                    var arrayForWord = Array(correctAnswer)
+                    
+                for x in 0...7 {
+                    
+                    if arrayForWord[x] == Character(playerGuessLowercased) {
+                        wordInProgress = replaceSingleLetter(from: wordInProgress, target: "-", with: Character(playerGuessLowercased), index: x)
+                    }
+                    
+                    
+                }
                     
                 actualSolution.text = wordInProgress
                 
@@ -252,15 +264,14 @@ class ViewController: UIViewController {
     }
     
     
-    func replaceSingleLetter(from originalWord: String, target: Character, with replacement: Character) -> String {
+    func replaceSingleLetter(from originalWord: String, target: Character, with replacement: Character, index: Int) -> String {
           var word = Array(originalWord)
         
-        for x in 0...word.count - 1 {
+        
             
-            if word[x] == target {
-                word[x] = replacement
+            if word[index] == target {
+                word[index] = replacement
             }
-        }
           
         let newWord = String(word)
           return newWord
