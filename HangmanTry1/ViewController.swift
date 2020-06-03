@@ -24,7 +24,7 @@ class ViewController: UIViewController {
     var hangmanImage: UIImageView!
     var pictureSources = [String]()
     var actualSolution: UILabel!
-    var answerShown: String?
+    var wordInProgress = "--------"
     var specificPath: String?
     var allWords = [String]()
     var guessedLetters = [String]()
@@ -54,7 +54,7 @@ class ViewController: UIViewController {
         actualSolution.translatesAutoresizingMaskIntoConstraints = false
         actualSolution.textAlignment = .left
         actualSolution.text = "--------"
-        actualSolution.font = UIFont.systemFont(ofSize: 28)
+        actualSolution.font = UIFont.systemFont(ofSize: 32)
         view.addSubview(actualSolution)
         
         currentAnswer = UITextField()
@@ -204,6 +204,7 @@ class ViewController: UIViewController {
                 present(ac, animated: true)
             }
             
+        }
             // Lowercased answer
             let playerGuessLowercased = playerAnswer.lowercased()
             
@@ -216,15 +217,21 @@ class ViewController: UIViewController {
                 present(ac, animated: true)
             } else if correctAnswer.contains(playerGuessLowercased) == true && playerGuessLowercased.count == 1 {
                 
-                for scalar in correctAnswer.unicodeScalars {
+               
                     
-                    print(scalar.value)
+                wordInProgress = replaceSingleLetter(from: wordInProgress, target: "-", with: Character(playerGuessLowercased))
+                    
+                actualSolution.text = wordInProgress
+                
+                
                 }
-//                actualSolution.text?.replacingOccurrences(of: "-", with: playerGuessLowercased, range: <#T##Range<String.Index>?#>)
-            }
+
             
             
-        }
+            
+            
+            
+        
         
         
         
@@ -243,5 +250,20 @@ class ViewController: UIViewController {
         correctAnswer = allWords[randomNumber]
         print(correctAnswer!)
     }
+    
+    
+    func replaceSingleLetter(from originalWord: String, target: Character, with replacement: Character) -> String {
+          var word = Array(originalWord)
+        
+        for x in 0...word.count - 1 {
+            
+            if word[x] == target {
+                word[x] = replacement
+            }
+        }
+          
+        let newWord = String(word)
+          return newWord
+      }
 }
 
