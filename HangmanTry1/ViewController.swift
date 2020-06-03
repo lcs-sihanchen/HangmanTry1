@@ -54,7 +54,7 @@ class ViewController: UIViewController {
         actualSolution.translatesAutoresizingMaskIntoConstraints = false
         actualSolution.textAlignment = .left
         actualSolution.text = "--------"
-        actualSolution.font = UIFont.systemFont(ofSize: 32)
+        actualSolution.font = UIFont.systemFont(ofSize: 50)
         view.addSubview(actualSolution)
         
         currentAnswer = UITextField()
@@ -205,44 +205,56 @@ class ViewController: UIViewController {
             }
             
         }
-            // Lowercased answer
-            let playerGuessLowercased = playerAnswer.lowercased()
+        // Lowercased answer
+        let playerGuessLowercased = playerAnswer.lowercased()
+        
+        
+        if playerGuessLowercased == correctAnswer {
+            let ac = UIAlertController(title: "Congratulations", message: "You can move on to the next level!", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "Continue", style: .default, handler: { (action) in
+                self.loadLevel()
+                self.currentAnswer.text = ""
+            }))
+            present(ac, animated: true)
             
-            if playerGuessLowercased == correctAnswer {
+        } else if correctAnswer.contains(playerGuessLowercased) == true && playerGuessLowercased.count == 1 {
+            
+            
+            
+            
+            var arrayForWord = Array(correctAnswer)
+            
+            for x in 0...7 {
+                
+                if arrayForWord[x] == Character(playerGuessLowercased) {
+                    wordInProgress = replaceSingleLetter(from: wordInProgress, target: "-", with: Character(playerGuessLowercased), index: x)
+                }
+                
+                
+            }
+            
+            
+            actualSolution.text = wordInProgress
+            
+            if wordInProgress == correctAnswer {
                 let ac = UIAlertController(title: "Congratulations", message: "You can move on to the next level!", preferredStyle: .alert)
                 ac.addAction(UIAlertAction(title: "Continue", style: .default, handler: { (action) in
                     self.loadLevel()
                     self.currentAnswer.text = ""
+                    self.actualSolution.text = "--------"
                 }))
                 present(ac, animated: true)
-            } else if correctAnswer.contains(playerGuessLowercased) == true && playerGuessLowercased.count == 1 {
-                
-               
-                    
-                
-                    
-                    
-                    var arrayForWord = Array(correctAnswer)
-                    
-                for x in 0...7 {
-                    
-                    if arrayForWord[x] == Character(playerGuessLowercased) {
-                        wordInProgress = replaceSingleLetter(from: wordInProgress, target: "-", with: Character(playerGuessLowercased), index: x)
-                    }
-                    
-                    
-                }
-                    
-                actualSolution.text = wordInProgress
                 
                 
-                }
-
+            }
             
-            
-            
-            
-            
+        }
+        
+        
+        
+        
+        
+        
         
         
         
@@ -265,16 +277,16 @@ class ViewController: UIViewController {
     
     
     func replaceSingleLetter(from originalWord: String, target: Character, with replacement: Character, index: Int) -> String {
-          var word = Array(originalWord)
+        var word = Array(originalWord)
         
         
-            
-            if word[index] == target {
-                word[index] = replacement
-            }
-          
+        
+        if word[index] == target {
+            word[index] = replacement
+        }
+        
         let newWord = String(word)
-          return newWord
-      }
+        return newWord
+    }
 }
 
