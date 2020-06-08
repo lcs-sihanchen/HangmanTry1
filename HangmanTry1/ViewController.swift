@@ -35,8 +35,10 @@ class ViewController: UIViewController {
     var wordInProgress = "--------"
     var specificPath: String?
     var allWords = [String]()
-    var guessedLetters = [String]()
+    var guessedLetters = [Character]()
+    var guessedLettersLabel: UILabel!
     var correctAnswer: String!
+    
     
     override func loadView() {
         view = UIView()
@@ -64,8 +66,15 @@ class ViewController: UIViewController {
         actualSolution.text = "--------"
         actualSolution.adjustsFontSizeToFitWidth = true
         actualSolution.font = UIFont(name: "Courier", size: 50)
-        
         view.addSubview(actualSolution)
+        
+        guessedLettersLabel = UILabel()
+        guessedLettersLabel.translatesAutoresizingMaskIntoConstraints = false
+        guessedLettersLabel.textAlignment = .left
+        guessedLettersLabel.text = ""
+        guessedLettersLabel.adjustsFontSizeToFitWidth = true
+        guessedLettersLabel.font = UIFont(name: "Courier", size: 50)
+        view.addSubview(guessedLettersLabel)
         
         currentAnswer = UITextField()
         currentAnswer.translatesAutoresizingMaskIntoConstraints = false
@@ -252,6 +261,7 @@ class ViewController: UIViewController {
                 
             }
             
+            guessedLetters.append(Character(playerGuessLowercased))
             
             actualSolution.text = wordInProgress
             self.currentAnswer.text = ""
