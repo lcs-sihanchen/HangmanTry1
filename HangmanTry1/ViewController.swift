@@ -54,7 +54,8 @@ class ViewController: UIViewController {
         actualSolution.translatesAutoresizingMaskIntoConstraints = false
         actualSolution.textAlignment = .center
         actualSolution.text = "--------"
-        actualSolution.font = UIFont.systemFont(ofSize: 50)
+        actualSolution.adjustsFontSizeToFitWidth = true
+        actualSolution.font = UIFont(name: "Courier", size: 50)
         
         view.addSubview(actualSolution)
         
