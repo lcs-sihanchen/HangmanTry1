@@ -16,8 +16,16 @@ class ViewController: UIViewController {
     var livesLabel: UILabel!
     var scoreLabel: UILabel!
     var currentAnswer: UITextField!
-    var lives = 0
-    var score = 0
+    var lives = 5 {
+        didSet {
+            livesLabel.text = "Lives: \(lives)"
+        }
+    }
+    var score = 0 {
+        didSet {
+            scoreLabel.text = "Score: \(score)"
+        }
+    }
     var letterButtons = [UIButton]()
     var activatedButtons = [UIButton]()
     var solutions = [String]()
@@ -177,7 +185,8 @@ class ViewController: UIViewController {
         
         hangmanImage.image = UIImage(named: pictureSources[0])
         
-        
+        score = 0
+        lives = 5
         
         
         
@@ -246,7 +255,7 @@ class ViewController: UIViewController {
             
             actualSolution.text = wordInProgress
             self.currentAnswer.text = ""
-
+            score += 1
             if wordInProgress == correctAnswer {
                 let ac = UIAlertController(title: "Congratulations", message: "You can move on to the next level!", preferredStyle: .alert)
                 ac.addAction(UIAlertAction(title: "Continue", style: .default, handler: { (action) in
@@ -254,6 +263,7 @@ class ViewController: UIViewController {
                     self.currentAnswer.text = ""
                     self.actualSolution.text = "--------"
                     self.wordInProgress = "--------"
+                   
                 }))
                 present(ac, animated: true)
                 
@@ -265,6 +275,7 @@ class ViewController: UIViewController {
         else if correctAnswer.contains(playerGuessLowercased) == false && playerGuessLowercased.count == 1 {
             
             lives -= 1
+            score -= 1
             let ac = UIAlertController(title: "Not even close!", message: "Please try again. Lives left: \(lives)", preferredStyle: .alert)
             ac.addAction(UIAlertAction(title: "Continue", style: .cancel))
             present(ac, animated: true)
@@ -274,6 +285,7 @@ class ViewController: UIViewController {
         } else {
             
             lives -= 1
+            score -= 1
             let ac = UIAlertController(title: "Try Again!", message: "You will get the word on next try!", preferredStyle: .alert)
             ac.addAction(UIAlertAction(title: "Continue", style: .cancel))
             present(ac, animated: true)
