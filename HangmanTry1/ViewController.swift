@@ -55,6 +55,7 @@ class ViewController: UIViewController {
         actualSolution.textAlignment = .center
         actualSolution.text = "--------"
         actualSolution.font = UIFont.systemFont(ofSize: 50)
+        
         view.addSubview(actualSolution)
         
         currentAnswer = UITextField()
@@ -222,7 +223,7 @@ class ViewController: UIViewController {
             }))
             present(ac, animated: true)
             
-        // If the player guess a letter
+        // If the player guess a letter right
         } else if correctAnswer.contains(playerGuessLowercased) == true && playerGuessLowercased.count == 1 {
             
             
@@ -236,7 +237,7 @@ class ViewController: UIViewController {
                     wordInProgress = replaceSingleLetter(from: wordInProgress, target: "-", with: Character(playerGuessLowercased), index: x)
                 }
                 
-                
+                // If the player gets a wrong answer and it is a letter
             }
             
             
@@ -255,6 +256,21 @@ class ViewController: UIViewController {
                 
             }
             
+        }
+        // If the player guess a letter wrong
+        else if correctAnswer.contains(playerGuessLowercased) == false && playerGuessLowercased.count == 1 {
+            
+            lives -= 1
+            let ac = UIAlertController(title: "Not even close!", message: "Please try again. Lives left: \(lives)", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "Continue", style: .cancel))
+            present(ac, animated: true)
+        // If the player does not get the full answer right
+        } else {
+            
+            lives -= 1
+            let ac = UIAlertController(title: "Try Again!", message: "You will get the word on next try!", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "Continue", style: .cancel))
+            present(ac, animated: true)
         }
         
         
@@ -277,6 +293,7 @@ class ViewController: UIViewController {
     }
     
     @objc func loadLevel() {
+        // get a random word from the database
         let randomNumber = Int.random(in: 0..<allWords.count - 1)
         correctAnswer = allWords[randomNumber]
         print(correctAnswer!)
