@@ -38,7 +38,7 @@ class ViewController: UIViewController {
         livesLabel = UILabel()
         livesLabel.translatesAutoresizingMaskIntoConstraints = false
         livesLabel.textAlignment = .left
-        livesLabel.text = "Lives: 5"
+        livesLabel.text = "Lives: \(lives)"
         livesLabel.backgroundColor = .red
         livesLabel.font = UIFont.systemFont(ofSize: 32)
         view.addSubview(livesLabel)
@@ -46,7 +46,7 @@ class ViewController: UIViewController {
         scoreLabel = UILabel()
         scoreLabel.translatesAutoresizingMaskIntoConstraints = false
         scoreLabel.textAlignment = .right
-        scoreLabel.text = "Score: 0"
+        scoreLabel.text = "Score: \(score)"
         scoreLabel.font = UIFont.systemFont(ofSize: 32)
         view.addSubview(scoreLabel)
         
@@ -74,10 +74,10 @@ class ViewController: UIViewController {
         submit.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(submit)
         
-        let clear = UIButton(type: .system)
-        clear.setTitle("Clear", for: .normal)
-        clear.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(clear)
+        let restart = UIButton(type: .system)
+        restart.setTitle("Restart", for: .normal)
+        restart.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(restart)
         
         let buttonsView = UIView()
         buttonsView.translatesAutoresizingMaskIntoConstraints = false
@@ -121,10 +121,10 @@ class ViewController: UIViewController {
             submit.widthAnchor.constraint(equalToConstant: 50),
             submit.heightAnchor.constraint(equalToConstant: 15),
             
-            clear.widthAnchor.constraint(equalToConstant: 50),
-            clear.heightAnchor.constraint(equalToConstant: 15),
-            clear.topAnchor.constraint(equalTo: currentAnswer.bottomAnchor, constant: 15),
-            clear.centerXAnchor.constraint(equalTo: view.layoutMarginsGuide.centerXAnchor, constant: -35),
+            restart.widthAnchor.constraint(equalToConstant: 50),
+            restart.heightAnchor.constraint(equalToConstant: 15),
+            restart.topAnchor.constraint(equalTo: currentAnswer.bottomAnchor, constant: 15),
+            restart.centerXAnchor.constraint(equalTo: view.layoutMarginsGuide.centerXAnchor, constant: -35),
             
             actualSolution.topAnchor.constraint(equalTo: submit.bottomAnchor, constant: 15),
             actualSolution.widthAnchor.constraint(equalTo: currentAnswer.widthAnchor),
@@ -143,7 +143,7 @@ class ViewController: UIViewController {
         // Trigger submitTapped method when submit button is tapped (same with the clear button below)
         submit.addTarget(self, action: #selector(submitTapped), for: .touchUpInside)
         
-        clear.addTarget(self, action: #selector(clearTapped), for: .touchUpInside)
+        restart.addTarget(self, action: #selector(restartTapped), for: .touchUpInside)
         
         
         
@@ -189,11 +189,13 @@ class ViewController: UIViewController {
         
         
         
-        // Eliminate empty input
+        // Eliminate empty and few letters input
         guard let playerAnswer = currentAnswer.text, currentAnswer.text != "" , currentAnswer.text?.count == 1 || currentAnswer.text?.count == 8 else {
             // Alert Here
             let alert = UIAlertController(title: "Wrong Input", message: "Please type a single letter or the full answer.", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+             alert.addAction(UIAlertAction(title: "Continue", style: .default, handler: { (action) in
+                           self.currentAnswer.text = ""
+                       }))
             present(alert, animated: true)
             return
         }
@@ -238,12 +240,13 @@ class ViewController: UIViewController {
                     wordInProgress = replaceSingleLetter(from: wordInProgress, target: "-", with: Character(playerGuessLowercased), index: x)
                 }
                 
-                // If the player gets a wrong answer and it is a letter
+                
             }
             
             
             actualSolution.text = wordInProgress
-            
+            self.currentAnswer.text = ""
+
             if wordInProgress == correctAnswer {
                 let ac = UIAlertController(title: "Congratulations", message: "You can move on to the next level!", preferredStyle: .alert)
                 ac.addAction(UIAlertAction(title: "Continue", style: .default, handler: { (action) in
@@ -265,6 +268,8 @@ class ViewController: UIViewController {
             let ac = UIAlertController(title: "Not even close!", message: "Please try again. Lives left: \(lives)", preferredStyle: .alert)
             ac.addAction(UIAlertAction(title: "Continue", style: .cancel))
             present(ac, animated: true)
+            self.currentAnswer.text = ""
+
         // If the player does not get the full answer right
         } else {
             
@@ -272,6 +277,8 @@ class ViewController: UIViewController {
             let ac = UIAlertController(title: "Try Again!", message: "You will get the word on next try!", preferredStyle: .alert)
             ac.addAction(UIAlertAction(title: "Continue", style: .cancel))
             present(ac, animated: true)
+            self.currentAnswer.text = ""
+
         }
         
         
@@ -288,9 +295,13 @@ class ViewController: UIViewController {
         
     }
     
-    
-    @objc func clearTapped(_ sender: UIButton) {
+    // load a new word
+    @objc func restartTapped(_ sender: UIButton) {
         
+        self.loadLevel()
+        self.currentAnswer.text = ""
+        self.actualSolution.text = "--------"
+        self.wordInProgress = "--------"
     }
     
     @objc func loadLevel() {
