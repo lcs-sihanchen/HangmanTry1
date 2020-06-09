@@ -234,8 +234,14 @@ class ViewController: UIViewController {
         // Lowercased answer
         let playerGuessLowercased = playerAnswer.lowercased()
         
+        if guessedLetters.contains(Character(playerGuessLowercased)) == true {
+            let ac = UIAlertController(title: "You have tried this!", message: "Try another one!", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "Continue", style: .cancel))
+            present(ac, animated: true)
+            self.currentAnswer.text = ""
+        }
         // If the player gets the answer in one guess
-        if playerGuessLowercased == correctAnswer {
+       else if playerGuessLowercased == correctAnswer {
             wordInProgress = playerGuessLowercased
             actualSolution.text = wordInProgress
             let ac = UIAlertController(title: "Congratulations", message: "You can move on to the next level!", preferredStyle: .alert)
@@ -268,9 +274,9 @@ class ViewController: UIViewController {
             guessedLetters.append(Character(playerGuessLowercased))
             
             if guessedLetters.isEmpty == false {
-                var stringToDisplay: String = ""
+                var stringToDisplay: String = "The letter you have guessed: \n"
                 for character in guessedLetters {
-                    stringToDisplay = stringToDisplay + String(character)
+                    stringToDisplay = stringToDisplay + String(character) + ", " + "\n"
                 }
                 guessedLettersLabel.text = stringToDisplay
             }
