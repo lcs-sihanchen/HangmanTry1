@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AVFoundation
 
 class ViewController: UIViewController {
     
@@ -38,7 +39,7 @@ class ViewController: UIViewController {
     var guessedLetters = [Character]()
     var guessedLettersLabel: UITextView!
     var correctAnswer: String!
-    
+    let synthesizer = AVSpeechSynthesizer()
     
     override func loadView() {
         view = UIView()
@@ -199,6 +200,8 @@ class ViewController: UIViewController {
         
         
         
+        
+        
     }
     
     
@@ -243,6 +246,9 @@ class ViewController: UIViewController {
         }
             // If the player gets the answer in one guess
         else if playerGuessLowercased == correctAnswer {
+            let wordToSpeak = "\(correctAnswer!)"
+            let utterance = AVSpeechUtterance(string: wordToSpeak)
+            synthesizer.speak(utterance)
             wordInProgress = playerGuessLowercased
             actualSolution.text = wordInProgress
             let ac = UIAlertController(title: "Congratulations", message: "You can move on to the next level!", preferredStyle: .alert)
@@ -289,6 +295,10 @@ class ViewController: UIViewController {
             self.currentAnswer.text = ""
             score += 1
             if wordInProgress == correctAnswer {
+                let wordToSpeak = "\(correctAnswer!)"
+                let utterance = AVSpeechUtterance(string: wordToSpeak)
+                synthesizer.speak(utterance)
+                
                 let ac = UIAlertController(title: "Congratulations", message: "You can move on to the next level!", preferredStyle: .alert)
                 ac.addAction(UIAlertAction(title: "Continue", style: .default, handler: { (action) in
                     self.loadLevel()
