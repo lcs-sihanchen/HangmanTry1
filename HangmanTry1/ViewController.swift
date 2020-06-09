@@ -49,7 +49,7 @@ class ViewController: UIViewController {
         livesLabel.translatesAutoresizingMaskIntoConstraints = false
         livesLabel.textAlignment = .left
         livesLabel.text = "Lives: \(lives)"
-        livesLabel.backgroundColor = .red
+//        livesLabel.backgroundColor = .red
         livesLabel.font = UIFont.systemFont(ofSize: 32)
         view.addSubview(livesLabel)
         
@@ -73,7 +73,7 @@ class ViewController: UIViewController {
         guessedLettersLabel.translatesAutoresizingMaskIntoConstraints = false
         guessedLettersLabel.textAlignment = .left
         guessedLettersLabel.text = "The letter you have guessed: \n"
-//        guessedLettersLabel.adjustsFontForContentSizeCategory = true
+        //        guessedLettersLabel.adjustsFontForContentSizeCategory = true
         guessedLettersLabel.font = UIFont(name: "Courier", size: 24)
         view.addSubview(guessedLettersLabel)
         
@@ -101,8 +101,10 @@ class ViewController: UIViewController {
         buttonsView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(buttonsView)
         
-        scoreLabel.backgroundColor = .blue
-        actualSolution.backgroundColor = .gray
+//        scoreLabel.backgroundColor = .blue
+//        actualSolution.backgroundColor = .gray
+        livesLabel.textColor = .red
+        
         // MARK: Image View
         hangmanImage = UIImageView()
         hangmanImage.translatesAutoresizingMaskIntoConstraints = false
@@ -185,19 +187,11 @@ class ViewController: UIViewController {
         }
         loadLevel()
         // Find the path of the file
-        let fm = FileManager.default
-        let path = Bundle.main.resourcePath!
-        let items = try! fm.contentsOfDirectory(atPath: path)
         
-        for item in items {
-            if item.hasPrefix("Hangman") {
-                pictureSources.append(item)
-            }
-        }
         // Sort by numbers for each stage of Hangman
         pictureSources.sort()
         
-
+        
         hangmanImage.image = UIImage(named: pictureSources[0])
         
         score = 0
@@ -230,11 +224,16 @@ class ViewController: UIViewController {
                 let ac = UIAlertController(title: "Wrong Input", message: "Please type a letter or the full answer.", preferredStyle: .alert)
                 ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
                 present(ac, animated: true)
+                self.currentAnswer.text = ""
+                return
             }
             
         }
+        
+        
         // Lowercased answer
         let playerGuessLowercased = playerAnswer.lowercased()
+        
         
         if playerGuessLowercased.count == 1 && guessedLetters.contains(Character(playerGuessLowercased)) == true {
             let ac = UIAlertController(title: "You have tried this!", message: "Try another one!", preferredStyle: .alert)
@@ -276,7 +275,7 @@ class ViewController: UIViewController {
             guessedLetters.append(Character(playerGuessLowercased))
             
             if guessedLetters.isEmpty == false {
-                var stringToDisplay: String = "The letter you have guessed: \n"
+                var stringToDisplay: String = "The letters you have guessed: \n"
                 for character in guessedLetters {
                     stringToDisplay = stringToDisplay + String(character) + ", "
                 }
@@ -309,37 +308,49 @@ class ViewController: UIViewController {
             
             lives -= 1
             score -= 1
-            let ac = UIAlertController(title: "Not even close!", message: "Please try again. Lives left: \(lives)", preferredStyle: .alert)
-            ac.addAction(UIAlertAction(title: "Continue", style: .cancel))
-            present(ac, animated: true)
-            self.currentAnswer.text = ""
-            
-            
+            if lives == 0 {
+                let alert = UIAlertController(title: "Your lives run out!", message: "The correct answer is \(correctAnswer!)!", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Try another word!", style: .default, handler: { (action) in
+                    self.loadLevel()
+                    self.currentAnswer.text = ""
+                    self.actualSolution.text = "--------"
+                    self.wordInProgress = "--------"
+                }))
+                present(alert, animated: true)
+            } else {
+                let ac = UIAlertController(title: "Not even close!", message: "Please try again. Lives left: \(lives)", preferredStyle: .alert)
+                ac.addAction(UIAlertAction(title: "Continue", style: .cancel))
+                present(ac, animated: true)
+                self.currentAnswer.text = ""
+                
+            }
             guessedLetters.append(Character(playerGuessLowercased))
             if guessedLetters.isEmpty == false {
-                var stringToDisplay: String = "The letter you have guessed: \n"
+                var stringToDisplay: String = "The letters you have guessed: \n"
                 for character in guessedLetters {
                     stringToDisplay = stringToDisplay + String(character) + ", "
                 }
                 guessedLettersLabel.text = stringToDisplay
                 
-            switch lives {
-            case 5:
-                hangmanImage.image = UIImage(named: pictureSources[0])
-            case 4:
-                hangmanImage.image = UIImage(named: pictureSources[1])
-            case 3:
-                hangmanImage.image = UIImage(named: pictureSources[2])
-            case 2:
-                hangmanImage.image = UIImage(named: pictureSources[3])
-            case 1:
-                hangmanImage.image = UIImage(named: pictureSources[4])
-            case 0:
-                hangmanImage.image = UIImage(named: pictureSources[5])
-            
-            default:
-                hangmanImage.image = UIImage(named: pictureSources[6])
-            }
+                switch lives {
+                case 5:
+                    hangmanImage.image = UIImage(named: pictureSources[0])
+                case 4:
+                    hangmanImage.image = UIImage(named: pictureSources[1])
+                case 3:
+                    hangmanImage.image = UIImage(named: pictureSources[2])
+                case 2:
+                    hangmanImage.image = UIImage(named: pictureSources[3])
+                case 1:
+                    hangmanImage.image = UIImage(named: pictureSources[4])
+                case 0:
+                    hangmanImage.image = UIImage(named: pictureSources[5])
+                    
+                    
+                default:
+                    hangmanImage.image = UIImage(named: pictureSources[6])
+                }
+                
             }
             
             
@@ -348,9 +359,21 @@ class ViewController: UIViewController {
             
             lives -= 1
             score -= 1
-            let ac = UIAlertController(title: "Try Again!", message: "You will get the word on next try!", preferredStyle: .alert)
-            ac.addAction(UIAlertAction(title: "Continue", style: .cancel))
-            present(ac, animated: true)
+            if lives == 0 {
+                let alert = UIAlertController(title: "Your lives run out!", message: "The correct answer is \(correctAnswer!)!", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Try another word!", style: .default, handler: { (action) in
+                    self.loadLevel()
+                    self.currentAnswer.text = ""
+                    self.actualSolution.text = "--------"
+                    self.wordInProgress = "--------"
+                }))
+                present(alert, animated: true)
+                
+            } else {
+                let ac = UIAlertController(title: "Try Again!", message: "You will get the word on next try!", preferredStyle: .alert)
+                ac.addAction(UIAlertAction(title: "Continue", style: .cancel))
+                present(ac, animated: true)
+            }
             self.currentAnswer.text = ""
             
             switch lives {
@@ -366,7 +389,8 @@ class ViewController: UIViewController {
                 hangmanImage.image = UIImage(named: pictureSources[4])
             case 0:
                 hangmanImage.image = UIImage(named: pictureSources[5])
-            
+                
+                
             default:
                 hangmanImage.image = UIImage(named: pictureSources[6])
             }
@@ -403,7 +427,17 @@ class ViewController: UIViewController {
         print(correctAnswer!)
         guessedLetters.removeAll()
         lives = 5
-        guessedLettersLabel.text = "The letter you have guessed: \n"
+        guessedLettersLabel.text = "The letters you have guessed: \n"
+        let fm = FileManager.default
+        let path = Bundle.main.resourcePath!
+        let items = try! fm.contentsOfDirectory(atPath: path)
+        
+        for item in items {
+            if item.hasPrefix("Hangman") {
+                pictureSources.append(item)
+            }
+        }
+        hangmanImage.image = UIImage(named: pictureSources[0])
     }
     
     
