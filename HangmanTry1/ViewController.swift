@@ -71,9 +71,9 @@ class ViewController: UIViewController {
         guessedLettersLabel = UILabel()
         guessedLettersLabel.translatesAutoresizingMaskIntoConstraints = false
         guessedLettersLabel.textAlignment = .left
-        guessedLettersLabel.text = ""
+        guessedLettersLabel.text = "The letter you have guessed: \n"
         guessedLettersLabel.adjustsFontSizeToFitWidth = true
-        guessedLettersLabel.font = UIFont(name: "Courier", size: 50)
+        guessedLettersLabel.font = UIFont(name: "Courier", size: 36)
         view.addSubview(guessedLettersLabel)
         
         currentAnswer = UITextField()
@@ -123,11 +123,11 @@ class ViewController: UIViewController {
             livesLabel.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 20),
             livesLabel.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor, constant: 20),
             
-            hangmanImage.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor),
+            hangmanImage.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor, multiplier: 0.8),
             hangmanImage.heightAnchor.constraint(equalTo: view.layoutMarginsGuide.heightAnchor, multiplier: 0.3),
             hangmanImage.topAnchor.constraint(equalTo: livesLabel.bottomAnchor, constant: 30),
             hangmanImage.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
-            hangmanImage.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor),
+            hangmanImage.trailingAnchor.constraint(equalTo: guessedLettersLabel.leadingAnchor),
             
             currentAnswer.topAnchor.constraint(equalTo: hangmanImage.bottomAnchor, constant: 40),
             currentAnswer.centerXAnchor.constraint(equalTo: view.layoutMarginsGuide.centerXAnchor),
@@ -145,7 +145,12 @@ class ViewController: UIViewController {
             
             actualSolution.topAnchor.constraint(equalTo: submit.bottomAnchor, constant: 15),
             actualSolution.widthAnchor.constraint(equalTo: currentAnswer.widthAnchor),
-            actualSolution.centerXAnchor.constraint(equalTo: view.layoutMarginsGuide.centerXAnchor)
+            actualSolution.centerXAnchor.constraint(equalTo: view.layoutMarginsGuide.centerXAnchor),
+            
+            guessedLettersLabel.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor, multiplier: 0.2),
+            guessedLettersLabel.leadingAnchor.constraint(equalTo: hangmanImage.trailingAnchor),
+            guessedLettersLabel.topAnchor.constraint(equalTo: livesLabel.bottomAnchor),
+            guessedLettersLabel.heightAnchor.constraint(equalTo: hangmanImage.heightAnchor)
             
             
             
@@ -154,7 +159,6 @@ class ViewController: UIViewController {
             
             
         ])
-        
         
         
         // Trigger submitTapped method when submit button is tapped (same with the clear button below)
@@ -262,6 +266,17 @@ class ViewController: UIViewController {
             }
             
             guessedLetters.append(Character(playerGuessLowercased))
+            
+            if guessedLetters.isEmpty == false {
+                var stringToDisplay: String = ""
+                for character in guessedLetters {
+                    stringToDisplay = stringToDisplay + String(character)
+                }
+                guessedLettersLabel.text = stringToDisplay
+            }
+            
+            
+            
             
             actualSolution.text = wordInProgress
             self.currentAnswer.text = ""
