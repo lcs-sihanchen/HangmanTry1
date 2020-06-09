@@ -211,7 +211,22 @@ class ViewController: UIViewController {
     
     
     @objc func shareTapped() {
+        // Convert image into jpeg data, with a specified quality of 0.8
         
+        guard let image = hangmanImage.image?.jpegData(compressionQuality: 0.8) else {
+            
+            // If there is no image, print this:
+            print("No image found")
+            return
+                
+        }
+        
+        let text = pictureSources[6]
+        let vc = UIActivityViewController(activityItems: [image] + [text], applicationActivities: [])
+        
+        // This line of code only works on Ipad, if it's iphone, it will be ignored
+        vc.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
+        present(vc, animated: true)
     }
     @objc func submitTapped(_ sender: UIButton) {
         
