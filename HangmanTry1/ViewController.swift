@@ -36,7 +36,7 @@ class ViewController: UIViewController {
     var specificPath: String?
     var allWords = [String]()
     var guessedLetters = [Character]()
-    var guessedLettersLabel: UILabel!
+    var guessedLettersLabel: UITextView!
     var correctAnswer: String!
     
     
@@ -68,12 +68,13 @@ class ViewController: UIViewController {
         actualSolution.font = UIFont(name: "Courier", size: 50)
         view.addSubview(actualSolution)
         
-        guessedLettersLabel = UILabel()
+        guessedLettersLabel = UITextView()
+        guessedLettersLabel.isUserInteractionEnabled = false
         guessedLettersLabel.translatesAutoresizingMaskIntoConstraints = false
         guessedLettersLabel.textAlignment = .left
         guessedLettersLabel.text = "The letter you have guessed: \n"
-        guessedLettersLabel.adjustsFontSizeToFitWidth = true
-        guessedLettersLabel.font = UIFont(name: "Courier", size: 36)
+//        guessedLettersLabel.adjustsFontForContentSizeCategory = true
+        guessedLettersLabel.font = UIFont(name: "Courier", size: 24)
         view.addSubview(guessedLettersLabel)
         
         currentAnswer = UITextField()
@@ -123,7 +124,7 @@ class ViewController: UIViewController {
             livesLabel.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 20),
             livesLabel.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor, constant: 20),
             
-            hangmanImage.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor, multiplier: 0.8),
+            hangmanImage.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor, multiplier: 0.6),
             hangmanImage.heightAnchor.constraint(equalTo: view.layoutMarginsGuide.heightAnchor, multiplier: 0.3),
             hangmanImage.topAnchor.constraint(equalTo: livesLabel.bottomAnchor, constant: 30),
             hangmanImage.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
@@ -147,9 +148,9 @@ class ViewController: UIViewController {
             actualSolution.widthAnchor.constraint(equalTo: currentAnswer.widthAnchor),
             actualSolution.centerXAnchor.constraint(equalTo: view.layoutMarginsGuide.centerXAnchor),
             
-            guessedLettersLabel.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor, multiplier: 0.2),
+            guessedLettersLabel.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor, multiplier: 0.4),
             guessedLettersLabel.leadingAnchor.constraint(equalTo: hangmanImage.trailingAnchor),
-            guessedLettersLabel.topAnchor.constraint(equalTo: livesLabel.bottomAnchor),
+            guessedLettersLabel.topAnchor.constraint(equalTo: livesLabel.bottomAnchor, constant: 30),
             guessedLettersLabel.heightAnchor.constraint(equalTo: hangmanImage.heightAnchor)
             
             
@@ -160,7 +161,7 @@ class ViewController: UIViewController {
             
         ])
         
-        
+        guessedLettersLabel.setContentHuggingPriority(UILayoutPriority(1), for: .vertical)
         // Trigger submitTapped method when submit button is tapped (same with the clear button below)
         submit.addTarget(self, action: #selector(submitTapped), for: .touchUpInside)
         
@@ -215,9 +216,9 @@ class ViewController: UIViewController {
         guard let playerAnswer = currentAnswer.text, currentAnswer.text != "" , currentAnswer.text?.count == 1 || currentAnswer.text?.count == 8 else {
             // Alert Here
             let alert = UIAlertController(title: "Wrong Input", message: "Please type a single letter or the full answer.", preferredStyle: .alert)
-             alert.addAction(UIAlertAction(title: "Continue", style: .default, handler: { (action) in
-                           self.currentAnswer.text = ""
-                       }))
+            alert.addAction(UIAlertAction(title: "Continue", style: .default, handler: { (action) in
+                self.currentAnswer.text = ""
+            }))
             present(alert, animated: true)
             return
         }
@@ -240,8 +241,8 @@ class ViewController: UIViewController {
             present(ac, animated: true)
             self.currentAnswer.text = ""
         }
-        // If the player gets the answer in one guess
-       else if playerGuessLowercased == correctAnswer {
+            // If the player gets the answer in one guess
+        else if playerGuessLowercased == correctAnswer {
             wordInProgress = playerGuessLowercased
             actualSolution.text = wordInProgress
             let ac = UIAlertController(title: "Congratulations", message: "You can move on to the next level!", preferredStyle: .alert)
@@ -254,7 +255,7 @@ class ViewController: UIViewController {
             }))
             present(ac, animated: true)
             
-        // If the player guess a letter right
+            // If the player guess a letter right
         } else if correctAnswer.contains(playerGuessLowercased) == true && playerGuessLowercased.count == 1 {
             
             
@@ -276,7 +277,7 @@ class ViewController: UIViewController {
             if guessedLetters.isEmpty == false {
                 var stringToDisplay: String = "The letter you have guessed: \n"
                 for character in guessedLetters {
-                    stringToDisplay = stringToDisplay + String(character) + ", " + "\n"
+                    stringToDisplay = stringToDisplay + String(character) + ", "
                 }
                 guessedLettersLabel.text = stringToDisplay
             }
@@ -294,7 +295,7 @@ class ViewController: UIViewController {
                     self.currentAnswer.text = ""
                     self.actualSolution.text = "--------"
                     self.wordInProgress = "--------"
-                   
+                    
                 }))
                 present(ac, animated: true)
                 
@@ -302,7 +303,7 @@ class ViewController: UIViewController {
             }
             
         }
-        // If the player guess a letter wrong
+            // If the player guess a letter wrong
         else if correctAnswer.contains(playerGuessLowercased) == false && playerGuessLowercased.count == 1 {
             
             lives -= 1
@@ -311,8 +312,19 @@ class ViewController: UIViewController {
             ac.addAction(UIAlertAction(title: "Continue", style: .cancel))
             present(ac, animated: true)
             self.currentAnswer.text = ""
-
-        // If the player does not get the full answer right
+            
+            
+            guessedLetters.append(Character(playerGuessLowercased))
+            if guessedLetters.isEmpty == false {
+                var stringToDisplay: String = "The letter you have guessed: \n"
+                for character in guessedLetters {
+                    stringToDisplay = stringToDisplay + String(character) + ", "
+                }
+                guessedLettersLabel.text = stringToDisplay
+            }
+            
+            
+            // If the player does not get the full answer right
         } else {
             
             lives -= 1
@@ -321,7 +333,7 @@ class ViewController: UIViewController {
             ac.addAction(UIAlertAction(title: "Continue", style: .cancel))
             present(ac, animated: true)
             self.currentAnswer.text = ""
-
+            
         }
         
         
@@ -352,6 +364,9 @@ class ViewController: UIViewController {
         let randomNumber = Int.random(in: 0..<allWords.count - 1)
         correctAnswer = allWords[randomNumber]
         print(correctAnswer!)
+        guessedLetters.removeAll()
+        lives = 5
+        guessedLettersLabel.text = "The letter you have guessed: \n"
     }
     
     
