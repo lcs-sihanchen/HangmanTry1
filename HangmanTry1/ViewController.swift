@@ -263,11 +263,10 @@ class ViewController: UIViewController {
         // Can't be empty, has to be string, should only contain 1 or 8 letters
         guard let playerAnswer = currentAnswer.text, currentAnswer.text != "" , currentAnswer.text?.count == 1 || currentAnswer.text?.count == 8 else {
             // Show an alert of wrong input
-            let alert = UIAlertController(title: "Wrong Input", message: "Please type a single letter or the full answer.", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Continue", style: .default, handler: { (action) in
+            sendAlertMessage(title: "Wrong Input", message: "Please type a single letter or the full answer.", action: UIAlertAction(title: "Continue", style: .default, handler: { (action) in
                 self.currentAnswer.text = ""
             }))
-            present(alert, animated: true)
+            
             return
         }
         
@@ -275,10 +274,10 @@ class ViewController: UIViewController {
         for n in 0...9{
             // if they have one of the numbers, then return
             if playerAnswer.hasPrefix("\(n)") == true {
+                
                 // Alert message here
-                let ac = UIAlertController(title: "Wrong Input", message: "Please type a letter or the full answer.", preferredStyle: .alert)
-                ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-                present(ac, animated: true)
+                sendAlertMessage(title: "Wrong Input", message: "Please type a letter or the full answer.", action: UIAlertAction(title: "Cancel", style: .cancel))
+                
                 self.currentAnswer.text = ""
                 return
             }
@@ -293,30 +292,28 @@ class ViewController: UIViewController {
         if playerGuessLowercased.count == 1 && guessedLetters.contains(Character(playerGuessLowercased)) == true {
             
             // Alert message here
-            let ac = UIAlertController(title: "You have tried this!", message: "Try another one!", preferredStyle: .alert)
-            ac.addAction(UIAlertAction(title: "Continue", style: .cancel))
-            present(ac, animated: true)
+            sendAlertMessage(title: "You have tried this!", message: "Try another one!", action: UIAlertAction(title: "Continue", style: .cancel))
+            
             self.currentAnswer.text = ""
         }
+            
             // If the player gets the answer in one guess
         else if playerGuessLowercased == correctAnswer {
+            
             // Speak the word when the user gets the correct answer
             let wordToSpeak = "\(correctAnswer!)"
             let utterance = AVSpeechUtterance(string: wordToSpeak)
             synthesizer.speak(utterance)
+            
             // Set the label to the correct answer so people can see
             wordInProgress = playerGuessLowercased
             actualSolution.text = wordInProgress
+            
             // Alert for going to the next level
-            let ac = UIAlertController(title: "Congratulations", message: "You can move on to the next level!", preferredStyle: .alert)
-            ac.addAction(UIAlertAction(title: "Continue", style: .default, handler: { (action) in
+            sendAlertMessage(title: "Congratulations", message: "You can move on to the next level!", action: UIAlertAction(title: "Continue", style: .default, handler: { (action) in
                 // call loadLevel() when player clicks continue
                 self.loadLevel()
-                self.currentAnswer.text = ""
-                self.actualSolution.text = "--------"
-                self.wordInProgress = "--------"
             }))
-            present(ac, animated: true)
             
             // If the player guess a letter right
         } else if correctAnswer.contains(playerGuessLowercased) == true && playerGuessLowercased.count == 1 {
@@ -363,15 +360,10 @@ class ViewController: UIViewController {
                 synthesizer.speak(utterance)
                 
                 // Alert for going to the next level
-                let ac = UIAlertController(title: "Congratulations", message: "You can move on to the next level!", preferredStyle: .alert)
-                ac.addAction(UIAlertAction(title: "Continue", style: .default, handler: { (action) in
+                sendAlertMessage(title: "Congratulations", message: "You can move on to the next level!", action: UIAlertAction(title: "Continue", style: .default, handler: { (action) in
                     self.loadLevel()
-                    self.currentAnswer.text = ""
-                    self.actualSolution.text = "--------"
-                    self.wordInProgress = "--------"
-                    
                 }))
-                present(ac, animated: true)
+               
                 
                 
             }
@@ -382,24 +374,21 @@ class ViewController: UIViewController {
             // Minus 1 on lives and score
             lives -= 1
             score -= 1
+            
             // When the lives run out, load another game
             if lives == 0 {
-                let alert = UIAlertController(title: "Your lives run out!", message: "The correct answer is \(correctAnswer!)!", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "Try another word!", style: .default, handler: { (action) in
+                sendAlertMessage(title: "Your lives run out!", message: "The correct answer is \(correctAnswer!)!", action: UIAlertAction(title: "Try another word!", style: .default, handler: { (action) in
                     self.loadLevel()
-                    self.currentAnswer.text = ""
-                    self.actualSolution.text = "--------"
-                    self.wordInProgress = "--------"
                 }))
-                present(alert, animated: true)
+                
+                
             // If not, give away an alert for -1 life
             } else {
-                let ac = UIAlertController(title: "Not even close!", message: "Please try again. Lives left: \(lives)", preferredStyle: .alert)
-                ac.addAction(UIAlertAction(title: "Continue", style: .cancel))
-                present(ac, animated: true)
+                sendAlertMessage(title: "Not even close!", message: "Please try again. Lives left: \(lives)", action: UIAlertAction(title: "Continue", style: .cancel))
                 self.currentAnswer.text = ""
                 
             }
+            
             // add the letter to the guessedLetters array and display it
             guessedLetters.append(Character(playerGuessLowercased))
             if guessedLetters.isEmpty == false {
@@ -439,20 +428,16 @@ class ViewController: UIViewController {
             score -= 1
             // When lives run out, load a new level
             if lives == 0 {
-                let alert = UIAlertController(title: "Your lives run out!", message: "The correct answer is \(correctAnswer!)!", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "Try another word!", style: .default, handler: { (action) in
+                sendAlertMessage(title: "Your lives run out!", message: "The correct answer is \(correctAnswer!)!", action: UIAlertAction(title: "Try another word!", style: .default, handler: { (action) in
                     self.loadLevel()
-                    self.currentAnswer.text = ""
-                    self.actualSolution.text = "--------"
-                    self.wordInProgress = "--------"
+                    
                 }))
-                present(alert, animated: true)
+                
             // If not, send a message of minus 1 life
             } else {
-                let ac = UIAlertController(title: "Try Again!", message: "You will get the word on next try!", preferredStyle: .alert)
-                ac.addAction(UIAlertAction(title: "Continue", style: .cancel))
-                present(ac, animated: true)
+                sendAlertMessage(title: "Try Again!", message: "You will get the word on next try!", action: UIAlertAction(title: "Continue", style: .cancel))
             }
+            
             // Reset the textfield
             self.currentAnswer.text = ""
             
@@ -496,10 +481,8 @@ class ViewController: UIViewController {
     @objc func restartTapped(_ sender: UIButton) {
         
         self.loadLevel()
-        self.currentAnswer.text = ""
-        self.actualSolution.text = "--------"
-        self.wordInProgress = "--------"
     }
+    
     
     // load it when ever we need to start a new word
     @objc func loadLevel() {
@@ -522,6 +505,9 @@ class ViewController: UIViewController {
             }
         }
         hangmanImage.image = UIImage(named: pictureSources[0])
+        currentAnswer.text = ""
+        actualSolution.text = "--------"
+        wordInProgress = "--------"
     }
     
 // Replace a letter in the string with another letter
@@ -536,6 +522,14 @@ class ViewController: UIViewController {
         
         let newWord = String(word)
         return newWord
+    }
+    
+    
+    func sendAlertMessage(title: String, message: String, action: UIAlertAction) {
+        let ac = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        ac.addAction(action)
+        present(ac, animated: true)
+        
     }
 }
 
