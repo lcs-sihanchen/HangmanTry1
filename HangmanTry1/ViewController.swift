@@ -299,7 +299,9 @@ class ViewController: UIViewController {
             
             // If the player gets the answer in one guess
         else if playerGuessLowercased == correctAnswer {
-            
+            let occurenceOfHyphens = wordInProgress.components(separatedBy: "-")
+            // For every letter that is guessed in a whole answer, score doubles
+            score += (occurenceOfHyphens.count - 1) * 2
             // Speak the word when the user gets the correct answer
             let wordToSpeak = "\(correctAnswer!)"
             let utterance = AVSpeechUtterance(string: wordToSpeak)
