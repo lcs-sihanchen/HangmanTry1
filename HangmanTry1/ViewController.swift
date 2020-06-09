@@ -17,35 +17,47 @@ class ViewController: UIViewController {
     var livesLabel: UILabel!
     var scoreLabel: UILabel!
     var currentAnswer: UITextField!
+    // Whenever the value of "lives" changed, the scoreLabel text changes as well
     var lives = 5 {
         didSet {
             livesLabel.text = "Lives: \(lives)"
         }
     }
+    // Whenever the value of "score" changed, the scoreLabel text changes as well
     var score = 0 {
         didSet {
             scoreLabel.text = "Score: \(score)"
         }
     }
-    var letterButtons = [UIButton]()
-    var activatedButtons = [UIButton]()
-    var solutions = [String]()
+    
+   
+    // This property is used to store the hangman image
     var hangmanImage: UIImageView!
+    // This property contains all the names of the pictures in the content
     var pictureSources = [String]()
+    // This label shows the player their progress
     var actualSolution: UILabel!
+    // This is the word in progress(being guessed)
     var wordInProgress = "--------"
-    var specificPath: String?
+    
+    // This array stores all the word from the txt file
     var allWords = [String]()
+    // This array stored all the letters that have been guessed
     var guessedLetters = [Character]()
+    // This textview is used to show player what letters they have guessed
     var guessedLettersLabel: UITextView!
+    // Correct Answer
     var correctAnswer: String!
+    // Used for speaking the word when the player gets the right answer
     let synthesizer = AVSpeechSynthesizer()
+    
     
     override func loadView() {
         view = UIView()
         view.backgroundColor = .white
         
         // MARK:Labels
+        // Add these labels to the view and give them some initial properties
         livesLabel = UILabel()
         livesLabel.translatesAutoresizingMaskIntoConstraints = false
         livesLabel.textAlignment = .left
@@ -88,6 +100,7 @@ class ViewController: UIViewController {
         
         
         // MARK: Buttons
+        // Here are some buttons, when clicked it will trigger some methods
         let submit = UIButton(type: .system)
         submit.setTitle("Submit", for: .normal)
         submit.translatesAutoresizingMaskIntoConstraints = false
@@ -119,6 +132,7 @@ class ViewController: UIViewController {
         view.addSubview(hangmanImage)
         
         // MARK: Layout Constraints
+        // Use code to give each piece of element some kind of constraints so it will be placed in the position they are and do not overlap
         NSLayoutConstraint.activate([
             
             scoreLabel.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 15),
@@ -166,14 +180,16 @@ class ViewController: UIViewController {
         
         guessedLettersLabel.setContentHuggingPriority(UILayoutPriority(1), for: .vertical)
         // Trigger submitTapped method when submit button is tapped (same with the clear button below)
+        // When submit is tapped, call submitTapped()
         submit.addTarget(self, action: #selector(submitTapped), for: .touchUpInside)
-        
+        // When restart is tapped, call restartTapped()
         restart.addTarget(self, action: #selector(restartTapped), for: .touchUpInside)
         
         
         
     }
     
+    // View will show and hide the navigation bar when tapped
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.hidesBarsOnTap = true
@@ -194,20 +210,22 @@ class ViewController: UIViewController {
                 allWords = startwords.components(separatedBy: "\n")
             }
         }
+        // Load the first word
         loadLevel()
-        // Find the path of the file
+        
         
         // Sort by numbers for each stage of Hangman
         pictureSources.sort()
         
+        // Add a share button in the navigation bar
         let theRightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareTapped))
-        
-        
         navigationItem.rightBarButtonItem = theRightBarButtonItem
         navigationController?.isNavigationBarHidden = false
         
+        // Set the initial image for hangman
         hangmanImage.image = UIImage(named: pictureSources[0])
         
+        // Set the initial score and lives
         score = 0
         lives = 5
         
@@ -217,7 +235,7 @@ class ViewController: UIViewController {
         
     }
     
-    
+    // When share button is tapped...
     @objc func shareTapped() {
         // Convert image into jpeg data, with a specified quality of 0.8
         
@@ -229,21 +247,22 @@ class ViewController: UIViewController {
                 
         }
         
-        let text = pictureSources[6]
+        let text = correctAnswer!
         let vc = UIActivityViewController(activityItems: [image] + [text], applicationActivities: [])
         
         // This line of code only works on Ipad, if it's iphone, it will be ignored
         vc.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
+        // Present so we can see it on the screen
         present(vc, animated: true)
     }
+    
+    // When submit button is tapped...
     @objc func submitTapped(_ sender: UIButton) {
         
-        
-        
-        
         // Eliminate empty and few letters input
+        // Can't be empty, has to be string, should only contain 1 or 8 letters
         guard let playerAnswer = currentAnswer.text, currentAnswer.text != "" , currentAnswer.text?.count == 1 || currentAnswer.text?.count == 8 else {
-            // Alert Here
+            // Show an alert of wrong input
             let alert = UIAlertController(title: "Wrong Input", message: "Please type a single letter or the full answer.", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Continue", style: .default, handler: { (action) in
                 self.currentAnswer.text = ""
@@ -254,7 +273,9 @@ class ViewController: UIViewController {
         
         // Eliminate int input
         for n in 0...9{
+            // if they have one of the numbers, then return
             if playerAnswer.hasPrefix("\(n)") == true {
+                // Alert message here
                 let ac = UIAlertController(title: "Wrong Input", message: "Please type a letter or the full answer.", preferredStyle: .alert)
                 ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
                 present(ac, animated: true)
@@ -268,8 +289,10 @@ class ViewController: UIViewController {
         // Lowercased answer
         let playerGuessLowercased = playerAnswer.lowercased()
         
-        
+        // If user submits a single letter and the letter is already in the guessed letters array, then return
         if playerGuessLowercased.count == 1 && guessedLetters.contains(Character(playerGuessLowercased)) == true {
+            
+            // Alert message here
             let ac = UIAlertController(title: "You have tried this!", message: "Try another one!", preferredStyle: .alert)
             ac.addAction(UIAlertAction(title: "Continue", style: .cancel))
             present(ac, animated: true)
@@ -277,11 +300,14 @@ class ViewController: UIViewController {
         }
             // If the player gets the answer in one guess
         else if playerGuessLowercased == correctAnswer {
+            // Speak the word when the user gets the correct answer
             let wordToSpeak = "\(correctAnswer!)"
             let utterance = AVSpeechUtterance(string: wordToSpeak)
             synthesizer.speak(utterance)
+            // Set the label to the correct answer so people can see
             wordInProgress = playerGuessLowercased
             actualSolution.text = wordInProgress
+            // Alert for going to the next level
             let ac = UIAlertController(title: "Congratulations", message: "You can move on to the next level!", preferredStyle: .alert)
             ac.addAction(UIAlertAction(title: "Continue", style: .default, handler: { (action) in
                 // call loadLevel() when player clicks continue
@@ -297,9 +323,9 @@ class ViewController: UIViewController {
             
             
             
-            
+            // Make the word an array of letters
             let arrayForWord = Array(correctAnswer)
-            
+            // In these eight letters, each of them will compare to the correct answer, if they are the same, replace the "-" with the character
             for x in 0...7 {
                 
                 if arrayForWord[x] == Character(playerGuessLowercased) {
@@ -309,8 +335,10 @@ class ViewController: UIViewController {
                 
             }
             
+            // Append the letter that the player just guessed to the guessed letters array
             guessedLetters.append(Character(playerGuessLowercased))
             
+            // if the array is not empty, append the letter to the label that displays the guessed letters
             if guessedLetters.isEmpty == false {
                 var stringToDisplay: String = "The letters you have guessed: \n"
                 for character in guessedLetters {
@@ -321,15 +349,20 @@ class ViewController: UIViewController {
             
             
             
-            
+            // Push wordInProgress on the screen
             actualSolution.text = wordInProgress
+            // Delete everything in the textfield so user can guess another letter
             self.currentAnswer.text = ""
+            // score +1 for getting 1 letter right
             score += 1
+            // If this is the last letter and the player gets it correctly
             if wordInProgress == correctAnswer {
+                // Speak the word
                 let wordToSpeak = "\(correctAnswer!)"
                 let utterance = AVSpeechUtterance(string: wordToSpeak)
                 synthesizer.speak(utterance)
                 
+                // Alert for going to the next level
                 let ac = UIAlertController(title: "Congratulations", message: "You can move on to the next level!", preferredStyle: .alert)
                 ac.addAction(UIAlertAction(title: "Continue", style: .default, handler: { (action) in
                     self.loadLevel()
@@ -344,11 +377,12 @@ class ViewController: UIViewController {
             }
             
         }
-            // If the player guess a letter wrong
+            // If the player guess a single letter wrong
         else if correctAnswer.contains(playerGuessLowercased) == false && playerGuessLowercased.count == 1 {
-            
+            // Minus 1 on lives and score
             lives -= 1
             score -= 1
+            // When the lives run out, load another game
             if lives == 0 {
                 let alert = UIAlertController(title: "Your lives run out!", message: "The correct answer is \(correctAnswer!)!", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "Try another word!", style: .default, handler: { (action) in
@@ -358,6 +392,7 @@ class ViewController: UIViewController {
                     self.wordInProgress = "--------"
                 }))
                 present(alert, animated: true)
+            // If not, give away an alert for -1 life
             } else {
                 let ac = UIAlertController(title: "Not even close!", message: "Please try again. Lives left: \(lives)", preferredStyle: .alert)
                 ac.addAction(UIAlertAction(title: "Continue", style: .cancel))
@@ -365,6 +400,7 @@ class ViewController: UIViewController {
                 self.currentAnswer.text = ""
                 
             }
+            // add the letter to the guessedLetters array and display it
             guessedLetters.append(Character(playerGuessLowercased))
             if guessedLetters.isEmpty == false {
                 var stringToDisplay: String = "The letters you have guessed: \n"
@@ -372,7 +408,8 @@ class ViewController: UIViewController {
                     stringToDisplay = stringToDisplay + String(character) + ", "
                 }
                 guessedLettersLabel.text = stringToDisplay
-                
+            
+            // Based on how many lives have been left, switch image
                 switch lives {
                 case 5:
                     hangmanImage.image = UIImage(named: pictureSources[0])
@@ -387,7 +424,7 @@ class ViewController: UIViewController {
                 case 0:
                     hangmanImage.image = UIImage(named: pictureSources[5])
                     
-                    
+                
                 default:
                     hangmanImage.image = UIImage(named: pictureSources[6])
                 }
@@ -395,11 +432,12 @@ class ViewController: UIViewController {
             }
             
             
-            // If the player does not get the full answer right
+            // If the player does not get the full answer correctly
         } else {
-            
+            // Minus 1 on lives and score
             lives -= 1
             score -= 1
+            // When lives run out, load a new level
             if lives == 0 {
                 let alert = UIAlertController(title: "Your lives run out!", message: "The correct answer is \(correctAnswer!)!", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "Try another word!", style: .default, handler: { (action) in
@@ -409,14 +447,16 @@ class ViewController: UIViewController {
                     self.wordInProgress = "--------"
                 }))
                 present(alert, animated: true)
-                
+            // If not, send a message of minus 1 life
             } else {
                 let ac = UIAlertController(title: "Try Again!", message: "You will get the word on next try!", preferredStyle: .alert)
                 ac.addAction(UIAlertAction(title: "Continue", style: .cancel))
                 present(ac, animated: true)
             }
+            // Reset the textfield
             self.currentAnswer.text = ""
             
+            // Based on how many lives have been left, determine the stage of the hangman
             switch lives {
             case 5:
                 hangmanImage.image = UIImage(named: pictureSources[0])
@@ -452,7 +492,7 @@ class ViewController: UIViewController {
         
     }
     
-    // load a new word
+    // load a new word(manually)
     @objc func restartTapped(_ sender: UIButton) {
         
         self.loadLevel()
@@ -461,6 +501,7 @@ class ViewController: UIViewController {
         self.wordInProgress = "--------"
     }
     
+    // load it when ever we need to start a new word
     @objc func loadLevel() {
         // get a random word from the database
         let randomNumber = Int.random(in: 0..<allWords.count - 1)
@@ -469,6 +510,8 @@ class ViewController: UIViewController {
         guessedLetters.removeAll()
         lives = 5
         guessedLettersLabel.text = "The letters you have guessed: \n"
+        
+        // Find the path of the file
         let fm = FileManager.default
         let path = Bundle.main.resourcePath!
         let items = try! fm.contentsOfDirectory(atPath: path)
@@ -481,7 +524,7 @@ class ViewController: UIViewController {
         hangmanImage.image = UIImage(named: pictureSources[0])
     }
     
-    
+// Replace a letter in the string with another letter
     func replaceSingleLetter(from originalWord: String, target: Character, with replacement: Character, index: Int) -> String {
         var word = Array(originalWord)
         
