@@ -192,6 +192,11 @@ class ViewController: UIViewController {
         // Sort by numbers for each stage of Hangman
         pictureSources.sort()
         
+        let theRightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareTapped))
+        let space = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        
+        navigationItem.rightBarButtonItem = theRightBarButtonItem
+        navigationController?.isNavigationBarHidden = false
         
         hangmanImage.image = UIImage(named: pictureSources[0])
         
@@ -205,6 +210,9 @@ class ViewController: UIViewController {
     }
     
     
+    @objc func shareTapped() {
+        
+    }
     @objc func submitTapped(_ sender: UIButton) {
         
         
