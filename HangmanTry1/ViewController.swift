@@ -197,6 +197,7 @@ class ViewController: UIViewController {
         // Sort by numbers for each stage of Hangman
         pictureSources.sort()
         
+
         hangmanImage.image = UIImage(named: pictureSources[0])
         
         score = 0
@@ -235,7 +236,7 @@ class ViewController: UIViewController {
         // Lowercased answer
         let playerGuessLowercased = playerAnswer.lowercased()
         
-        if guessedLetters.contains(Character(playerGuessLowercased)) == true {
+        if playerGuessLowercased.count == 1 && guessedLetters.contains(Character(playerGuessLowercased)) == true {
             let ac = UIAlertController(title: "You have tried this!", message: "Try another one!", preferredStyle: .alert)
             ac.addAction(UIAlertAction(title: "Continue", style: .cancel))
             present(ac, animated: true)
@@ -321,6 +322,24 @@ class ViewController: UIViewController {
                     stringToDisplay = stringToDisplay + String(character) + ", "
                 }
                 guessedLettersLabel.text = stringToDisplay
+                
+            switch lives {
+            case 5:
+                hangmanImage.image = UIImage(named: pictureSources[0])
+            case 4:
+                hangmanImage.image = UIImage(named: pictureSources[1])
+            case 3:
+                hangmanImage.image = UIImage(named: pictureSources[2])
+            case 2:
+                hangmanImage.image = UIImage(named: pictureSources[3])
+            case 1:
+                hangmanImage.image = UIImage(named: pictureSources[4])
+            case 0:
+                hangmanImage.image = UIImage(named: pictureSources[5])
+            
+            default:
+                hangmanImage.image = UIImage(named: pictureSources[6])
+            }
             }
             
             
@@ -333,6 +352,24 @@ class ViewController: UIViewController {
             ac.addAction(UIAlertAction(title: "Continue", style: .cancel))
             present(ac, animated: true)
             self.currentAnswer.text = ""
+            
+            switch lives {
+            case 5:
+                hangmanImage.image = UIImage(named: pictureSources[0])
+            case 4:
+                hangmanImage.image = UIImage(named: pictureSources[1])
+            case 3:
+                hangmanImage.image = UIImage(named: pictureSources[2])
+            case 2:
+                hangmanImage.image = UIImage(named: pictureSources[3])
+            case 1:
+                hangmanImage.image = UIImage(named: pictureSources[4])
+            case 0:
+                hangmanImage.image = UIImage(named: pictureSources[5])
+            
+            default:
+                hangmanImage.image = UIImage(named: pictureSources[6])
+            }
             
         }
         
