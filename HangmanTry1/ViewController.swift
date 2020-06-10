@@ -192,11 +192,13 @@ class ViewController: UIViewController {
     // View will show and hide the navigation bar when tapped
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        navigationController?.hidesBarsWhenKeyboardAppears = true
         navigationController?.hidesBarsOnTap = true
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        navigationController?.hidesBarsWhenKeyboardAppears = true
         navigationController?.hidesBarsOnTap = false
     }
     
