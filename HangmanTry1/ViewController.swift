@@ -206,6 +206,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        title = "Hangman"
         // Load start.txt
         if let startWordsURL = Bundle.main.url(forResource: "start", withExtension: "txt") {
             if let startwords = try? String(contentsOf: startWordsURL) {
